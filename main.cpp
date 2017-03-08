@@ -17,6 +17,7 @@ using namespace std;
 // copy_data transfers data from text file to matrix of type float
 void copy_data(string data_file_name, vector<vector <float> >& data_matrix);
 double leave_one_out_accuracy(vector<vector <float> >& data_matrix);
+float nn_classifier(vector< vector<float> >& training_data_matrix, vector<float> &instance, vector<int>& features);
 
 int main() {
     
@@ -61,6 +62,18 @@ int main() {
         
     cout << "Running nearest neighbor with all " << data_matrix[0].size() - 1 << " features, using \"leave-one-out\" evaluation, I get an accuracy of " << accuracy*100 << "%" << endl <<endl;
     
+    vector<float> test_instance;
+    test_instance.push_back(2);
+    test_instance.push_back(4);
+    test_instance.push_back(3);
+
+    vector<int> features;
+    //features.push_back(0);
+    features.push_back(1);
+    features.push_back(2);
+
+    //cout << "Classifying 111...\n" << nn_classifier(data_matrix, test_instance, features) <<endl;
+
     switch(selection) {
     
         case 1: std::cout << "Forward Selection selected." << std::endl;
@@ -135,7 +148,6 @@ double leave_one_out_accuracy(vector<vector <float> >& data_matrix) {
     float nearest_neighbor_distance = pow(10,38);
     float euclidean_distance = 0;
     int nearest_neighbor_row = 0;
-    int i = 0;
 
     //Loop for each row in matrix
     for (int m = 0; m < data_matrix.size(); m++) {
@@ -180,3 +192,44 @@ double leave_one_out_accuracy(vector<vector <float> >& data_matrix) {
 
     return accuracy/(data_matrix.size());
 }
+
+
+float nn_classifier(vector < vector <float> >& training_data_matrix, vector<float>& instance, vector<int>& selected_features) {
+
+    float classification = 0; 
+    float nn_distance = pow(10,38);
+    float e_distance = 0;
+    int nn_instance = 0;
+
+    //Loop through each instance in the training data matrix
+    for( int i = 0; i < training_data_matrix.size(); i++) {
+
+        //Compute Euclid distance for selected feautres
+        for(int j = 0; j < selected_features.size(); j++) {
+        
+            
+         //   cout << "selected feature: " << selected_features.at(j) << endl;
+             e_distance += pow((training_data_matrix[i][selected_features.at(j)] - instance[selected_features.at(j)]),2);
+                
+        }
+            e_distance = sqrt(e_distance);
+
+                if (e_distance < nn_distance){
+                    nn_distance = e_distance;
+                    nn_instance = i;
+                }
+            //clear e_distance
+            e_distance = 0;
+    }
+
+    classification = training_data_matrix[nn_instance][0];
+    
+
+    return classification;
+}
+
+
+
+
+
+
