@@ -16,8 +16,11 @@ using namespace std;
 
 // copy_data transfers data from text file to matrix of type float
 void copy_data(string data_file_name, vector<vector <float> >& data_matrix);
-double leave_one_out_accuracy(vector<vector <float> >& data_matrix);
+double leave_one_out_accuracy(vector<vector <float> >& data_matrix, vector<int> passed_features);
 float nn_classifier(vector< vector<float> >& training_data_matrix, vector<float> &instance, vector<int>& features);
+void forward_selection(vector< vector <float> >& data_matrix);
+
+string to_string(int i);
 
 int main() {
     
@@ -53,7 +56,12 @@ int main() {
     cin >> selection;
   
 
-    double accuracy = leave_one_out_accuracy(data_matrix);
+    vector<int> features;
+     for( int i = 1; i < data_matrix[0].size(); i++) {
+         features.push_back(i);
+        
+     }
+    double accuracy = leave_one_out_accuracy(data_matrix, features );
 
     cout << "This dataset has " << data_matrix[0].size() - 1 << " features (not including the class attributes), with " << data_matrix.size() << " instances." << endl << endl;
 
@@ -76,7 +84,7 @@ int main() {
 
     switch(selection) {
     
-        case 1: std::cout << "Forward Selection selected." << std::endl;
+        case 1: std::cout << "Forward Selection selected." << std::endl; forward_selection(data_matrix);
                 break;
         case 2: std::cout << "Backward Elimination selected." << std::endl;
                 break;
@@ -143,67 +151,12 @@ return;
 
 
 
-
-/*
-double leave_one_out_accuracy(vector<vector <float> >& data_matrix) {
-    double accuracy = 0; // used to calculate
-    
-    float home_point = 0;
-    float nearest_neighbor_distance = pow(10,38);
-    float euclidean_distance = 0;
-    int nearest_neighbor_row = 0;
-
-    //Loop for each row in matrix
-    for (int m = 0; m < data_matrix.size(); m++) {
-        //Select a row from the matrix (row i)
-        
-
-        //Compute row i's distance from all other rows
-        for(int j = 0; j < data_matrix.size(); j++) {
-            
-            if (m != j){
-                for (int k = 1; k < data_matrix[j].size(); k++) {
-                
-                    euclidean_distance += pow((data_matrix[j][k] - data_matrix[m][k]),2);
-                
-                }
-            
-                 euclidean_distance = sqrt(euclidean_distance);
-                if (euclidean_distance < nearest_neighbor_distance){
-                    nearest_neighbor_distance = euclidean_distance;
-                    nearest_neighbor_row = j;
-                }
-            }
-
-            //clear euclidean distance
-            euclidean_distance = 0;
-
-        }
- 
- //       cout << "nearest neighbor for " << data_matrix[m][0] << data_matrix[m][1] << data_matrix[m][2] << " is " <<  data_matrix[nearest_neighbor_row][0] << data_matrix[nearest_neighbor_row][1] << data_matrix[nearest_neighbor_row][2] << " with a euclid distance of " << nearest_neighbor_distance << endl;
- //     //check accuracy
-        if (data_matrix[m][0] == data_matrix[nearest_neighbor_row][0]){
-            
-            accuracy++;
-
-        }
-
-        //Clear variables
-        nearest_neighbor_distance = pow(10,38);
-
-
-    }
-
-    return accuracy/(data_matrix.size());
-}
-
-*/
-double leave_one_out_accuracy(vector<vector <float> >& data_matrix) {
+double leave_one_out_accuracy(vector<vector <float> >& data_matrix, vector<int> passed_features) {
     
     double  accuracy = 0.0; // used to calculate
     vector< vector <float> > training_set = data_matrix;
     vector<float> selected_instance;
-    vector<int> features;
+    vector<int> features = passed_features;
     float predicted_class;
 
     //Loop for each row in matrix
@@ -213,14 +166,14 @@ double leave_one_out_accuracy(vector<vector <float> >& data_matrix) {
         selected_instance = training_set.at(m);
         training_set.erase(training_set.begin() + m);
         
-        //for( int i = 1; i < selected_instance.size(); i++) {
-        
-       //     features.push_back(i);
+      //  for( int i = 1; i < selected_instance.size(); i++) {
+        //
+          //  features.push_back(i);
         
        // }
-       features.push_back(5);
-       features.push_back(7);
-       features.push_back(3);
+      // features.push_back(1);
+      // features.push_back(27);
+      // features.push_back(3);
 
         predicted_class = nn_classifier(training_set, selected_instance, features);
 
@@ -277,8 +230,94 @@ float nn_classifier(vector < vector <float> >& training_data_matrix, vector<floa
     return classification;
 }
 
+void forward_selection(vector<vector<float> >& data_matrix){
+
+    vector<int> parent_feature_subset, child_feature_subset, best_feature_subset, local_best_feature_subset; 
+    double best_accuracy, accuracy, local_best_accuracy = 0;
+    string w = "";
+    bool already_has = false;
+   
+    for( int d = 1; d < data_matrix[d].size();d++) {
+    //fill feature index with number of 
+    for (int i = 1; i < data_matrix[i].size(); i++) {
+       
+        child_feature_subset = parent_feature_subset;
+        for(int c = 0; c < child_feature_subset.size(); c++){
+            if( i == child_feature_subset.at(c)){
+                already_has = true;
+            }
+        }
+        if (already_has){ 
+            already_has = false;
+            continue;
+        }
+        child_feature_subset.push_back(i);
+        accuracy = leave_one_out_accuracy(data_matrix, child_feature_subset);
+
+        for(int a = 0; a < child_feature_subset.size(); a++) {
+            if (a !=0) w.append(",");
+            w.append(to_string(child_feature_subset.at(a)));
+
+        }
+
+        //local best subset accuracy
+        if (accuracy > local_best_accuracy){
+            local_best_feature_subset = child_feature_subset;
+            local_best_accuracy = accuracy;
+        }
+
+        //record high feature subset percentage
+        if (accuracy > best_accuracy){
+            best_feature_subset = child_feature_subset;
+            best_accuracy = accuracy;
+        }
+        cout << "\tUsing feature(s) {" << w << "} accuracy is " << accuracy*100 << "%\n";
+        child_feature_subset = parent_feature_subset;
+        
+        //clear local records
+        w = "";
+    //    local_best_accuracy = 0;
+      //  local_best_feature_subset.clear();
+    }
+
+    for(int b = 0; b <local_best_feature_subset.size(); b++) {
+        if (b !=0) w.append(",");
+        w.append(to_string(local_best_feature_subset.at(b)));
+
+    }
+    if (local_best_accuracy < best_accuracy) {
+        
+        cout << "\n(Warning, Accuracy has decreased! Continuing search in case of local maxima)\n";
+    } else {
+        cout << endl;
+    }
+    cout << "Feature set {"<< w << "} was best, accuracy is " << local_best_accuracy*100 << "%\n\n";
+    w = "";
+
+
+    parent_feature_subset = local_best_feature_subset;
+    local_best_accuracy = 0;
+    local_best_feature_subset.clear();
+
+    }
+
+
+    for(int b = 0; b < best_feature_subset.size(); b++) {
+        if (b !=0) w.append(",");
+        w.append(to_string(best_feature_subset.at(b)));
+
+    }
+    cout << "Finished search!! The best feature subset is {" << w << "}, which has an accuracy of " << best_accuracy*100 << "%\n";
+
+
+    return;
+}
 
 
 
-
-
+string to_string(int i)
+{
+        std::stringstream ss;
+            ss << i;
+                return ss.str();
+}
