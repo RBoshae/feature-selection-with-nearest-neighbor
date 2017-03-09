@@ -62,15 +62,15 @@ int main() {
         
     cout << "Running nearest neighbor with all " << data_matrix[0].size() - 1 << " features, using \"leave-one-out\" evaluation, I get an accuracy of " << accuracy*100 << "%" << endl <<endl;
     
-    vector<float> test_instance;
-    test_instance.push_back(2);
-    test_instance.push_back(4);
-    test_instance.push_back(3);
+   // vector<float> test_instance;
+   // test_instance.push_back(2);
+   // test_instance.push_back(4);
+   // test_instance.push_back(3);
 
-    vector<int> features;
+   // vector<int> features;
     //features.push_back(0);
-    features.push_back(1);
-    features.push_back(2);
+   // features.push_back(1);
+   // features.push_back(2);
 
     //cout << "Classifying 111...\n" << nn_classifier(data_matrix, test_instance, features) <<endl;
 
@@ -141,6 +141,10 @@ void copy_data(string data_file_name, vector<vector <float> >& data_matrix) {
 return;
 }
 
+
+
+
+/*
 double leave_one_out_accuracy(vector<vector <float> >& data_matrix) {
     double accuracy = 0; // used to calculate
     
@@ -176,8 +180,8 @@ double leave_one_out_accuracy(vector<vector <float> >& data_matrix) {
 
         }
  
- /*       cout << "nearest neighbor for " << data_matrix[m][0] << data_matrix[m][1] << data_matrix[m][2] << " is " <<  data_matrix[nearest_neighbor_row][0] << data_matrix[nearest_neighbor_row][1] << data_matrix[nearest_neighbor_row][2] << " with a euclid distance of " << nearest_neighbor_distance << endl;
- */     //check accuracy
+ //       cout << "nearest neighbor for " << data_matrix[m][0] << data_matrix[m][1] << data_matrix[m][2] << " is " <<  data_matrix[nearest_neighbor_row][0] << data_matrix[nearest_neighbor_row][1] << data_matrix[nearest_neighbor_row][2] << " with a euclid distance of " << nearest_neighbor_distance << endl;
+ //     //check accuracy
         if (data_matrix[m][0] == data_matrix[nearest_neighbor_row][0]){
             
             accuracy++;
@@ -192,6 +196,51 @@ double leave_one_out_accuracy(vector<vector <float> >& data_matrix) {
 
     return accuracy/(data_matrix.size());
 }
+
+*/
+double leave_one_out_accuracy(vector<vector <float> >& data_matrix) {
+    
+    double  accuracy = 0.0; // used to calculate
+    vector< vector <float> > training_set = data_matrix;
+    vector<float> selected_instance;
+    vector<int> features;
+    float predicted_class;
+
+    //Loop for each row in matrix
+    for (int m = 0; m < data_matrix.size(); m++) {
+        //Select a row from the matrix (row i)
+        training_set = data_matrix;
+        selected_instance = training_set.at(m);
+        training_set.erase(training_set.begin() + m);
+        
+        //for( int i = 1; i < selected_instance.size(); i++) {
+        
+       //     features.push_back(i);
+        
+       // }
+       features.push_back(5);
+       features.push_back(7);
+       features.push_back(3);
+
+        predicted_class = nn_classifier(training_set, selected_instance, features);
+
+ 
+      //check accuracy
+    if (selected_instance[0] == predicted_class){
+            
+            accuracy++;
+
+        }
+
+
+
+    }
+
+    return accuracy/(data_matrix.size());
+}
+
+
+
 
 
 float nn_classifier(vector < vector <float> >& training_data_matrix, vector<float>& instance, vector<int>& selected_features) {
