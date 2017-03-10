@@ -19,6 +19,7 @@ void copy_data(string data_file_name, vector<vector <float> >& data_matrix);
 double leave_one_out_accuracy(vector<vector <float> >& data_matrix, vector<int> passed_features);
 float nn_classifier(vector< vector<float> >& training_data_matrix, vector<float> &instance, vector<int>& features);
 void forward_selection(vector< vector <float> >& data_matrix);
+void backward_elimination(vector<vector<float> >& data_matrix);
 
 string to_string(int i);
 
@@ -86,7 +87,7 @@ int main() {
     
         case 1: std::cout << "Forward Selection selected." << std::endl; forward_selection(data_matrix);
                 break;
-        case 2: std::cout << "Backward Elimination selected." << std::endl;
+        case 2: std::cout << "Backward Elimination selected." << std::endl; backward_elimination(data_matrix);
                 break;
         case 3: std::cout << "Ricks Special Algorithm selected." << std::endl;
                 break;
@@ -309,6 +310,84 @@ void forward_selection(vector<vector<float> >& data_matrix){
     }
     cout << "Finished search!! The best feature subset is {" << w << "}, which has an accuracy of " << best_accuracy*100 << "%\n";
 
+
+    return;
+}
+
+
+void backward_elimination(vector<vector<float> >& data_matrix){
+
+    vector<int> parent_feature_subset, child_feature_subset, best_feature_subset, local_best_feature_subset; 
+    double best_accuracy, accuracy, local_best_accuracy = 0;
+    string w = "";
+    
+    //Populate parent_feature_subset will all features in a given instance.
+    for(int i = 1; i < data_matrix[0].size(); i++){
+        parent_feature_subset.push_back(i);
+    }
+
+    child_feature_subset = parent_feature_subset;
+
+    //For each instance in the data matrix, remove one feature and get accuracy.
+    while(parent_feature_subset.size() != 1){
+        
+        
+        for( int d = 0; d < child_feature_subset.size();d++) {
+            
+            child_feature_subset = parent_feature_subset;
+            child_feature_subset.erase(child_feature_subset.begin() + d);
+            accuracy = leave_one_out_accuracy(data_matrix, child_feature_subset);
+
+        for(int a = 0; a < child_feature_subset.size(); a++) {
+            if (a !=0) w.append(",");
+            w.append(to_string(child_feature_subset.at(a)));
+
+        }
+
+        //local best subset accuracy
+        if (accuracy > local_best_accuracy){
+            local_best_feature_subset = child_feature_subset;
+            local_best_accuracy = accuracy;
+        }
+
+        //record high feature subset percentage
+        if (accuracy > best_accuracy){
+            best_feature_subset = child_feature_subset;
+            best_accuracy = accuracy;
+        }
+        cout << "\tUsing feature(s) {" << w << "} accuracy is " << accuracy*100 << "%\n";
+        child_feature_subset = parent_feature_subset;
+        
+        //clear local records
+        w = "";
+    }
+    
+
+    for(int b = 0; b <local_best_feature_subset.size(); b++) {
+        if (b !=0) w.append(",");
+        w.append(to_string(local_best_feature_subset.at(b)));
+    }
+    if (local_best_accuracy < best_accuracy) {
+        
+        cout << "\n(Warning, Accuracy has decreased! Continuing search in case of local maxima)\n";
+    } else {
+        cout << endl;
+    }
+    cout << "Feature set {"<< w << "} was best, accuracy is " << local_best_accuracy*100 << "%\n\n";
+    w = "";
+
+    parent_feature_subset = local_best_feature_subset;
+    local_best_accuracy = 0;
+    local_best_feature_subset.clear();
+    }
+
+
+    for(int index = 0; index < best_feature_subset.size(); index++) {
+        if (index !=0) w.append(",");
+        w.append(to_string(best_feature_subset.at(index)));
+    }
+
+    cout << "Finished search!! The best feature subset is {" << w << "}, which has an accuracy of " << best_accuracy*100 << "%\n";
 
     return;
 }
