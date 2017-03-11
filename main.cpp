@@ -327,6 +327,26 @@ void backward_elimination(vector<vector<float> >& data_matrix){
     }
 
     child_feature_subset = parent_feature_subset;
+    //special case for root/initial parent
+    accuracy = leave_one_out_accuracy(data_matrix, child_feature_subset);
+    //record high feature subset percentage
+    if (accuracy > best_accuracy){
+        best_feature_subset = child_feature_subset;
+        best_accuracy = accuracy;
+    }
+
+    for(int index = 0; index < best_feature_subset.size(); index++) {
+        if (index !=0) w.append(",");
+        w.append(to_string(best_feature_subset.at(index)));
+    }
+    
+    cout << "\tInitial feature(s) {" << w << "} accuracy is " << accuracy*100 << "%\n\n";
+    child_feature_subset = parent_feature_subset;
+        
+    //clear local records
+    w = "";
+    
+
 
     //For each instance in the data matrix, remove one feature and get accuracy.
     while(parent_feature_subset.size() != 1){

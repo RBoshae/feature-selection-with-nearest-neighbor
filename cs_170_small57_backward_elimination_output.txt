@@ -1,0 +1,101 @@
+Welcome to Rick Boshae's Feature Selection Algorithm.
+Type in the name of the file to test : small_dataset/cs_170_small57.txt
+File successfully opened.
+Type the number of the algorithm you want me to run.
+	1) Forward Selection
+	2) Backward Elimination
+	3) Rick's Special Algorithm
+2
+This dataset has 10 features (not including the class attributes), with 100 instances.
+
+Please wait while I normalize the data...(under construction)
+
+Running nearest neighbor with all 10 features, using "leave-one-out" evaluation, I get an accuracy of 64%
+
+Backward Elimination selected.
+	Initial feature(s) {1,2,3,4,5,6,7,8,9,10} accuracy is 64%
+
+	Using feature(s) {2,3,4,5,6,7,8,9,10} accuracy is 67%
+	Using feature(s) {1,3,4,5,6,7,8,9,10} accuracy is 63%
+	Using feature(s) {1,2,4,5,6,7,8,9,10} accuracy is 63%
+	Using feature(s) {1,2,3,5,6,7,8,9,10} accuracy is 67%
+	Using feature(s) {1,2,3,4,6,7,8,9,10} accuracy is 63%
+	Using feature(s) {1,2,3,4,5,7,8,9,10} accuracy is 60%
+	Using feature(s) {1,2,3,4,5,6,8,9,10} accuracy is 67%
+	Using feature(s) {1,2,3,4,5,6,7,9,10} accuracy is 65%
+	Using feature(s) {1,2,3,4,5,6,7,8,10} accuracy is 59%
+	Using feature(s) {1,2,3,4,5,6,7,8,9} accuracy is 62%
+
+Feature set {2,3,4,5,6,7,8,9,10} was best, accuracy is 67%
+
+	Using feature(s) {3,4,5,6,7,8,9,10} accuracy is 70%
+	Using feature(s) {2,4,5,6,7,8,9,10} accuracy is 65%
+	Using feature(s) {2,3,5,6,7,8,9,10} accuracy is 66%
+	Using feature(s) {2,3,4,6,7,8,9,10} accuracy is 68%
+	Using feature(s) {2,3,4,5,7,8,9,10} accuracy is 65%
+	Using feature(s) {2,3,4,5,6,8,9,10} accuracy is 69%
+	Using feature(s) {2,3,4,5,6,7,9,10} accuracy is 70%
+	Using feature(s) {2,3,4,5,6,7,8,10} accuracy is 67%
+	Using feature(s) {2,3,4,5,6,7,8,9} accuracy is 71%
+
+Feature set {2,3,4,5,6,7,8,9} was best, accuracy is 71%
+
+	Using feature(s) {3,4,5,6,7,8,9} accuracy is 65%
+	Using feature(s) {2,4,5,6,7,8,9} accuracy is 61%
+	Using feature(s) {2,3,5,6,7,8,9} accuracy is 72%
+	Using feature(s) {2,3,4,6,7,8,9} accuracy is 72%
+	Using feature(s) {2,3,4,5,7,8,9} accuracy is 68%
+	Using feature(s) {2,3,4,5,6,8,9} accuracy is 72%
+	Using feature(s) {2,3,4,5,6,7,9} accuracy is 72%
+	Using feature(s) {2,3,4,5,6,7,8} accuracy is 61%
+
+Feature set {2,3,5,6,7,8,9} was best, accuracy is 72%
+
+	Using feature(s) {3,5,6,7,8,9} accuracy is 72%
+	Using feature(s) {2,5,6,7,8,9} accuracy is 71%
+	Using feature(s) {2,3,6,7,8,9} accuracy is 67%
+	Using feature(s) {2,3,5,7,8,9} accuracy is 68%
+	Using feature(s) {2,3,5,6,8,9} accuracy is 74%
+	Using feature(s) {2,3,5,6,7,9} accuracy is 73%
+	Using feature(s) {2,3,5,6,7,8} accuracy is 62%
+
+Feature set {2,3,5,6,8,9} was best, accuracy is 74%
+
+	Using feature(s) {3,5,6,8,9} accuracy is 77%
+	Using feature(s) {2,5,6,8,9} accuracy is 73%
+	Using feature(s) {2,3,6,8,9} accuracy is 78%
+	Using feature(s) {2,3,5,8,9} accuracy is 61%
+	Using feature(s) {2,3,5,6,9} accuracy is 71%
+	Using feature(s) {2,3,5,6,8} accuracy is 68%
+
+Feature set {2,3,6,8,9} was best, accuracy is 78%
+
+	Using feature(s) {3,6,8,9} accuracy is 78%
+	Using feature(s) {2,6,8,9} accuracy is 76%
+	Using feature(s) {2,3,8,9} accuracy is 67%
+	Using feature(s) {2,3,6,9} accuracy is 73%
+	Using feature(s) {2,3,6,8} accuracy is 70%
+
+Feature set {3,6,8,9} was best, accuracy is 78%
+
+	Using feature(s) {6,8,9} accuracy is 87%
+	Using feature(s) {3,8,9} accuracy is 72%
+	Using feature(s) {3,6,9} accuracy is 88%
+	Using feature(s) {3,6,8} accuracy is 69%
+
+Feature set {3,6,9} was best, accuracy is 88%
+
+	Using feature(s) {6,9} accuracy is 91%
+	Using feature(s) {3,9} accuracy is 76%
+	Using feature(s) {3,6} accuracy is 68%
+
+Feature set {6,9} was best, accuracy is 91%
+
+	Using feature(s) {9} accuracy is 80%
+	Using feature(s) {6} accuracy is 68%
+
+(Warning, Accuracy has decreased! Continuing search in case of local maxima)
+Feature set {9} was best, accuracy is 80%
+
+Finished search!! The best feature subset is {6,9}, which has an accuracy of 91%
+
