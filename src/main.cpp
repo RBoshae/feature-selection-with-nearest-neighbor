@@ -121,7 +121,7 @@ void copy_data(string data_file_name, vector<vector <float> >& data_matrix) {
     if (data_file.is_open()) {
         
         // Output to verify that the file is accessable
-        cout << "File successfully opened.\n";
+        cout << "File opened successfully.\n";
 
         while( !data_file.eof() ) {    
 
@@ -142,7 +142,7 @@ void copy_data(string data_file_name, vector<vector <float> >& data_matrix) {
         }
 
         data_file.close();
-         }else {
+         } else {
         cout << "Error opening file\n";
         cout << "The file may have been mispelled or not exist.\n";
         exit(1);
